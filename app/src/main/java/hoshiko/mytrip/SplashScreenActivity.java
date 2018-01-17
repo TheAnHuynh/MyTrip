@@ -33,6 +33,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         if(currentUser != null){
             // Điều hướng đến main activity
             Intent mainActivity = new Intent(SplashScreenActivity.this,MainActivity.class);
+            startActivity(mainActivity);
+            finish();
         }else{
             // Điều hướng đến LoginActivity
             Intent loginIntent = new Intent(SplashScreenActivity.this,LoginActivity.class);

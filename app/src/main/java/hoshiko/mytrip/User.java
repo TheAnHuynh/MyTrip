@@ -1,5 +1,7 @@
 package hoshiko.mytrip;
 
+import android.net.Uri;
+
 /**
  * Created by An on 1/14/2018.
  */

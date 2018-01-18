@@ -17,13 +17,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private  String TAG = SignUpActivity.class.getSimpleName();
+    private static String TAG = SignUpActivity.class.getSimpleName();
 
     private EditText edtFullName, edtEmail,edtPassword,edtConfirmPassword;
     private CheckBox chkTermsAndConditions;
@@ -31,15 +29,15 @@ public class SignUpActivity extends AppCompatActivity {
     private TextView txtSignIn;
 
     private FirebaseAuth mAuth;
-    private FirebaseDatabase database;
-    private DatabaseReference mData;
+//    private FirebaseDatabase database;
+//    private DatabaseReference mData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_activity);
         mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        mData = database.getReference();
+//        database = FirebaseDatabase.getInstance();
+//        mData = database.getReference();
         addControls();
         addEvennts();
     }
@@ -78,17 +76,20 @@ public class SignUpActivity extends AppCompatActivity {
 
                 if(password.isEmpty()){
                     Log.e(TAG, "Password tên bị bỏ trống !");
-                    Toast.makeText(SignUpActivity.this,"Password bị bỏ trống !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this,"Password bị bỏ trống !",
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }else {
                     if(password.length() < 6){
                         Log.e(TAG, "Password ít hơn 6 ký tự !");
-                        Toast.makeText(SignUpActivity.this,"Password ít hơn 6 ký tự !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SignUpActivity.this,"Password ít hơn 6 ký tự !",
+                                Toast.LENGTH_SHORT).show();
                         return;
                     }else{
                         if(!password.equals(confirm_password)){
                             Log.e(TAG, "Xác nhận password không khớp!");
-                            Toast.makeText(SignUpActivity.this,"Xác nhận password không khớp !", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this,"Xác nhận password không khớp !",
+                                    Toast.LENGTH_SHORT).show();
                             return;
                         }
                     }
@@ -96,7 +97,8 @@ public class SignUpActivity extends AppCompatActivity {
 
                 if(!chkTermsAndConditions.isChecked()){
                     Log.e(TAG, "Chưa đồng ý với điều khoản");
-                    Toast.makeText(SignUpActivity.this,"Bạn chưa đồng ý với điều khoản của chúng tôi !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this,"Bạn chưa đồng ý với điều khoản của chúng tôi !",
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
                 dangKy(hoTen,email,password);
@@ -131,7 +133,9 @@ public class SignUpActivity extends AppCompatActivity {
                             Log.e(TAG, "Authentication successful.");
                             Toast.makeText(SignUpActivity.this, "Đăng ký tài khoản thành công !.",
                                     Toast.LENGTH_SHORT).show();
-                            xuLyDangKyTaiKhoanThanhCong(new User(hoTen,email));
+                            FirebaseUser currentUser= mAuth.getCurrentUser();
+                            updateDisplayName(currentUser, hoTen);
+
                             Intent mainActivityIntent = new Intent(SignUpActivity.this,MainActivity.class);
                             startActivity(mainActivityIntent);
                             finish();
@@ -145,10 +149,25 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
-    private void xuLyDangKyTaiKhoanThanhCong(User user){
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        String currentUID = currentUser.getUid();
-        mData.child(Constant.USERS).child(currentUID).setValue(user);
+    private void updateDisplayName(FirebaseUser currentUser, String displayName) {
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(displayName).build();
+
+        currentUser.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "User profile updated.");
+                        }
+                    }
+                });
     }
+
+//    private void xuLyDangKyTaiKhoanThanhCong(User user){
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        String currentUID = currentUser.getUid();
+//        mData.child(Constant.USERS).child(currentUID).setValue(user);
+//    }
 
 }

@@ -23,4 +23,18 @@
     <!--<style name="FullscreenTheme" parent="Theme.AppCompat.Light.NoActionBar">-->
         <!--<item name="android:windowTranslucentStatus">true</item>-->
     <!--</style>-->
+
+    <!--fragment style-->
+    <style name="fragmentTextViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
+        <!--<item name="android:paddingTop">2dp</item>-->
+        <!--<item name="android:paddingBottom">2dp</item>-->
+        <!--<item name="android:drawableBottom">@drawable/vertical_line</item>-->
+        <!--<item name="android:drawableTop">@drawable/vertical_line</item>-->
+    </style>
+
 </resources>

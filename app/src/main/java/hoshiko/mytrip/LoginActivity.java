@@ -2,7 +2,6 @@ package hoshiko.mytrip;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,8 +33,6 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import static android.text.InputType.TYPE_CLASS_TEXT;
 import static android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD;
@@ -55,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private CallbackManager mCallbackManager;
     private GoogleSignInClient mGoogleSignInClient;
-    private DatabaseReference mData;
+//    private DatabaseReference mData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login_activity);
         Log.d(TAG, "onCreate");
         mAuth = FirebaseAuth.getInstance();
-        mData = FirebaseDatabase.getInstance().getReference(Constant.USERS);
+        //mData = FirebaseDatabase.getInstance().getReference(Constant.USERS);
         // Initialize Facebook Login button
         mCallbackManager = CallbackManager.Factory.create();
         // Configure sign-in to request the user's ID, email address, and basic
@@ -107,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 // Đăng nhập bằng tài khoản MyTrip.
-                signIn(edtEmail.getText().toString(),edtPassword.getText().toString());
+                signInFirebaseWithAnEmailAndPassword(edtEmail.getText().toString(),edtPassword.getText().toString());
             }
         });
 
@@ -188,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void signIn(String email, String password){
+    private void signInFirebaseWithAnEmailAndPassword(String email, String password){
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -222,8 +219,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            //FirebaseUser user = mAuth.getCurrentUser();
+                            //updateUI(user);
                             goToMainActivity();
                         } else {
                             // If sign in fails, display a message to the user.
@@ -244,11 +241,12 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    private void updateUI(FirebaseUser user) {
-        User currentUser = new User(user.getDisplayName(), user.getEmail());
-        String uID = user.getUid();
-        mData.child(uID).setValue(currentUser);
-    }
+//    private void updateUI(FirebaseUser user) {
+//        User currentUser = new User(user.getDisplayName(), user.getEmail());
+//        currentUser.setAvtUrl(user.getPhotoUrl().toString());
+//        String uID = user.getUid();
+//        mData.child(uID).setValue(currentUser);
+//    }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
@@ -275,8 +273,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.i(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
+                            //FirebaseUser user = mAuth.getCurrentUser();
+                            //updateUI(user);
                             goToMainActivity();
 
                         } else {

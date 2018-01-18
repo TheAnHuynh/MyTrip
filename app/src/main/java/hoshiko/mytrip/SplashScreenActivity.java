@@ -20,8 +20,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
         // Kiểm tra thông tin người dùng sau cùng.
         /**
          * Nếu người dùng dã đăng nhập thì:
@@ -41,14 +41,5 @@ public class SplashScreenActivity extends AppCompatActivity {
             startActivity(loginIntent);
             finish();
         }
-
     }
-
-//    public void updateUI(FirebaseUser currentUser){
-//        // Cập nhật thông tin ngưới dùng.
-//        Toast.makeText(SplashScreenActivity.this, currentUser.getDisplayName(), Toast.LENGTH_SHORT).show();
-//        Toast.makeText(SplashScreenActivity.this, currentUser.getEmail(), Toast.LENGTH_SHORT).show();
-//        Toast.makeText(SplashScreenActivity.this, currentUser.getProviderId(), Toast.LENGTH_SHORT).show();
-//        Toast.makeText(SplashScreenActivity.this, currentUser.getPhoneNumber(), Toast.LENGTH_SHORT).show();
-//    }
 }

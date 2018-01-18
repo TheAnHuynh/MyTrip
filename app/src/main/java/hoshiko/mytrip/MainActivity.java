@@ -7,7 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+
 public class MainActivity extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference mData;
+
+    private  User currentUser;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mBottomNavigation
             = new BottomNavigationView.OnNavigationItemSelectedListener() {

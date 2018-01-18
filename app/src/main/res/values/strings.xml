@@ -54,4 +54,8 @@
     <string name="menu_my_places"> My Places</string>
     <string name="menu_favorites">Favorites</string>
     <string name="menu_settings">Settings</string>
+
+    <!-- settings fragment -->
+
+    <string name="userInfo">THÔNG TIN CÁ NHÂN</string>
 </resources>

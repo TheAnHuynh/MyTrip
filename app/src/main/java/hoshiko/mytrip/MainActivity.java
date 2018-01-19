@@ -1,11 +1,14 @@
 package hoshiko.mytrip;
 
-import android.app.FragmentManager;
+
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -16,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mData;
 
     private  User currentUser;
+
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener mBottomNavigation
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -61,26 +66,36 @@ public class MainActivity extends AppCompatActivity {
 
     public void switchToPopularFragment() {
         PopularFragment popularFragment = new PopularFragment();
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragmentContainer, popularFragment).commit();
-    }
-
-    private void switchToSettingsFragment() {
-        SettingsFragment settingsFragment = new SettingsFragment();
-        FragmentManager manager = getFragmentManager();
-        manager.beginTransaction().replace(R.id.fragmentContainer, settingsFragment).commit();
-
     }
 
     private void switchToFavoritesFragment() {
         FavoritesFragment favoritesFragment = new FavoritesFragment();
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragmentContainer, favoritesFragment).commit();
     }
 
     private void switchToMyPlacesFragment() {
         MyPlacesFragment myPlacesFragment = new MyPlacesFragment();
-        FragmentManager manager = getFragmentManager();
+        FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragmentContainer, myPlacesFragment).commit();
     }
+
+    private void switchToSettingsFragment() {
+        SettingsFragment settingsFragment = new SettingsFragment();
+        FragmentManager manager = getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.fragmentContainer, settingsFragment).commit();
+//        TextView txtCurrnentUI = findViewById(R.id.txtCurrentUserInfo);
+//        txtCurrnentUI.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                FragmentManager manager = getSupportFragmentManager();
+//                manager.beginTransaction().replace(R.id.fragmentContainer, new UserManagerFragment())
+//                        .addToBackStack(null)
+//                        .commit();
+//            }
+//        });
+    }
+
 }

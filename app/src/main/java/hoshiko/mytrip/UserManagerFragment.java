@@ -1,10 +1,10 @@
 package hoshiko.mytrip;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +39,8 @@ public class UserManagerFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
+
+
     public UserManagerFragment(){
     }
 
@@ -47,62 +49,60 @@ public class UserManagerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View userManagerView = inflater.inflate(R.layout.fragment_user_manager,
                 container, false);
-        btnBack = userManagerView.findViewById(R.id.btnBack);
-        btnAvatarChange = userManagerView.findViewById(R.id.btnAvatarChange);
-        imgProfileImage = userManagerView.findViewById(R.id.profile_image);
-        edtName = userManagerView.findViewById(R.id.edtUserName);
-        edtEmail = userManagerView.findViewById(R.id.edtEmail);
-        btnEdit = userManagerView.findViewById(R.id.btnUserInfoChange);
-        btnSave = userManagerView.findViewById(R.id.btnSaveUserInfo);
-
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            edtName.setText(currentUser.getDisplayName());
-            edtEmail.setText(currentUser.getEmail());
-            txtUID.setText(currentUser.getUid());
-
-            if(!currentUser.getPhotoUrl().toString().isEmpty()){
-                Glide.with(userManagerView).load(currentUser.getPhotoUrl())
-                        .into(imgProfileImage);
-            }
-
-
-            btnAvatarChange.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //TODO: Xử lý cập nhật ảnh đại diện.
-
-                }
-            });
-
-            btnBack.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager manager = getFragmentManager();
-                    manager.beginTransaction().replace(R.id.fragmentContainer,new SettingsFragment()).commit();
-                }
-            });
-
-            btnEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    btnEdit.setEnabled(false);
-                    edtName.setEnabled(true);
-                    edtEmail.setEnabled(true);
-                    btnSave.setEnabled(true);
-                }
-            });
-
-            btnSave.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //TODO: Xử lý cập nhật thông tin user
-                    updateNameAndEmail();
-                }
-            });
-
-        }
+//        btnBack = userManagerView.findViewById(R.id.btnBack);
+//        btnAvatarChange = userManagerView.findViewById(R.id.btnAvatarChange);
+//        imgProfileImage = userManagerView.findViewById(R.id.profile_image);
+//        edtName = userManagerView.findViewById(R.id.edtUserName);
+//        edtEmail = userManagerView.findViewById(R.id.edtEmail);
+//        btnEdit = userManagerView.findViewById(R.id.btnUserInfoChange);
+//        btnSave = userManagerView.findViewById(R.id.btnSaveUserInfo);
+//
+//        mAuth = FirebaseAuth.getInstance();
+//        currentUser = mAuth.getCurrentUser();
+//        if(currentUser != null){
+//            edtName.setText(currentUser.getDisplayName());
+//            edtEmail.setText(currentUser.getEmail());
+//            txtUID.setText(currentUser.getUid());
+//
+//            if(!currentUser.getPhotoUrl().toString().isEmpty()){
+//                Glide.with(userManagerView).load(currentUser.getPhotoUrl())
+//                        .into(imgProfileImage);
+//            }
+//
+//
+//            btnAvatarChange.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //TODO: Xử lý cập nhật ảnh đại diện.
+//
+//                }
+//            });
+//
+//            btnBack.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//
+//                }
+//            });
+//
+//            btnEdit.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    btnEdit.setEnabled(false);
+//                    edtName.setEnabled(true);
+//                    edtEmail.setEnabled(true);
+//                    btnSave.setEnabled(true);
+//                }
+//            });
+//
+//            btnSave.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    //TODO: Xử lý cập nhật thông tin user
+//                    updateNameAndEmail();
+//                }
+//            });
+//      }
 
         return userManagerView;
     }

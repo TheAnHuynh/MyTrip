@@ -3,11 +3,11 @@
 
     <item android:state_enabled="true"
           android:state_pressed="false">
-        <color android:color="@color/background_color"></color>
+        <color android:color="@color/amberBasic"></color>
     </item>
     <item android:state_enabled="true"
           android:state_pressed="true">
-        <color android:color="@color/amberBasic"></color>
+        <color android:color="@color/amberDark"></color>
     </item>
 
 </selector>

@@ -30,7 +30,9 @@ public class SettingsFragment extends Fragment {
         txtCurrentUserInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 UserManagerFragment fragment = new UserManagerFragment();
+
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.fragmentContainer, fragment);

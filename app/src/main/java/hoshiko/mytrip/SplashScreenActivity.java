@@ -10,13 +10,11 @@ import android.widget.Toast;
 
 public class SplashScreenActivity extends AppCompatActivity {
     public final static String TAG = SplashScreenActivity.class.getSimpleName();
-    private static FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.splash_screen_activity);
-        mAuth = FirebaseAuth.getInstance();
     }
 
     @Override
@@ -29,7 +27,7 @@ public class SplashScreenActivity extends AppCompatActivity {
          *  + điều hướng đến newsfeed
          *  nếu chưa đăng nhập thì điều hướng đến LoginActivity
          */
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if(currentUser != null){
             // Điều hướng đến main activity
             Intent mainActivity = new Intent(SplashScreenActivity.this,MainActivity.class);

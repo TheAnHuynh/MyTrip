@@ -86,16 +86,6 @@ public class MainActivity extends AppCompatActivity {
         SettingsFragment settingsFragment = new SettingsFragment();
         FragmentManager manager = getSupportFragmentManager();
         manager.beginTransaction().replace(R.id.fragmentContainer, settingsFragment).commit();
-//        TextView txtCurrnentUI = findViewById(R.id.txtCurrentUserInfo);
-//        txtCurrnentUI.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                FragmentManager manager = getSupportFragmentManager();
-//                manager.beginTransaction().replace(R.id.fragmentContainer, new UserManagerFragment())
-//                        .addToBackStack(null)
-//                        .commit();
-//            }
-//        });
     }
 
 }

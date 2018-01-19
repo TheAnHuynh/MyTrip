@@ -2,11 +2,30 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_enabled="true"
         android:state_pressed="false">
-        <color android:color="#ffffff00"/>
+        <shape android:shape="rectangle">
+            <stroke android:color="@color/amberBasic" android:width="2px"/>
+            <size android:width="32dp" android:height="32dp"/>
+            <corners android:radius="16dp"/>
+        </shape>
     </item>
 
     <item android:state_enabled="true"
         android:state_pressed="true">
-        <color android:color="#DCDCDC"/>
+
+        <shape android:shape="rectangle">
+            <solid android:color="#DCDCDC"/>
+            <size android:width="32dp" android:height="32dp"/>
+            <corners android:radius="16dp"/>
+        </shape>
+    </item>
+
+    <item android:state_enabled="true"
+        android:state_hovered="true">
+
+        <shape android:shape="rectangle">
+            <solid android:color="#DCDCDC"/>
+            <size android:width="32dp" android:height="32dp"/>
+            <corners android:radius="16dp"/>
+        </shape>
     </item>
 </selector>

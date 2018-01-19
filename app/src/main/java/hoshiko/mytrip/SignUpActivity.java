@@ -19,6 +19,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class SignUpActivity extends AppCompatActivity {
 
     private static String TAG = SignUpActivity.class.getSimpleName();
@@ -29,15 +32,13 @@ public class SignUpActivity extends AppCompatActivity {
     private TextView txtSignIn;
 
     private FirebaseAuth mAuth;
-//    private FirebaseDatabase database;
-//    private DatabaseReference mData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sign_up_activity);
         mAuth = FirebaseAuth.getInstance();
-//        database = FirebaseDatabase.getInstance();
-//        mData = database.getReference();
+
         addControls();
         addEvennts();
     }
@@ -63,31 +64,40 @@ public class SignUpActivity extends AppCompatActivity {
                 String confirm_password = edtConfirmPassword.getText().toString().trim();
 
                 if (hoTen.isEmpty()){
-                    Log.e(TAG, "Họ tên bị bỏ trống !");
+                    Log.d(TAG, "Họ tên bị bỏ trống !");
                     Toast.makeText(SignUpActivity.this,"Họ tên bị bỏ trống !", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (email.isEmpty()){
-                    Log.e(TAG, "Email tên bị bỏ trống !");
+                    Log.d(TAG, "Email tên bị bỏ trống !");
                     Toast.makeText(SignUpActivity.this,"Email bị bỏ trống !", Toast.LENGTH_SHORT).show();
                     return;
+                }else {
+                    Pattern p = Pattern.compile(Constant.regEx);
+                    Matcher m = p.matcher(email);
+                    if (!m.find()){
+                        Log.d(TAG , "Email INVALIDED");
+                        Toast.makeText(SignUpActivity.this,
+                                "Email chứa ký tự không hợp lệ",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                 }
 
                 if(password.isEmpty()){
-                    Log.e(TAG, "Password tên bị bỏ trống !");
+                    Log.d(TAG, "Password tên bị bỏ trống !");
                     Toast.makeText(SignUpActivity.this,"Password bị bỏ trống !",
                             Toast.LENGTH_SHORT).show();
                     return;
                 }else {
                     if(password.length() < 6){
-                        Log.e(TAG, "Password ít hơn 6 ký tự !");
+                        Log.d(TAG, "Password ít hơn 6 ký tự !");
                         Toast.makeText(SignUpActivity.this,"Password ít hơn 6 ký tự !",
                                 Toast.LENGTH_SHORT).show();
                         return;
                     }else{
                         if(!password.equals(confirm_password)){
-                            Log.e(TAG, "Xác nhận password không khớp!");
+                            Log.d(TAG, "Xác nhận password không khớp!");
                             Toast.makeText(SignUpActivity.this,"Xác nhận password không khớp !",
                                     Toast.LENGTH_SHORT).show();
                             return;
@@ -96,7 +106,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
 
                 if(!chkTermsAndConditions.isChecked()){
-                    Log.e(TAG, "Chưa đồng ý với điều khoản");
+                    Log.d(TAG, "Chưa đồng ý với điều khoản");
                     Toast.makeText(SignUpActivity.this,"Bạn chưa đồng ý với điều khoản của chúng tôi !",
                             Toast.LENGTH_SHORT).show();
                     return;
@@ -130,18 +140,16 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Log.e(TAG, "Authentication successful.");
+                            Log.d(TAG, "Authentication successful.");
                             Toast.makeText(SignUpActivity.this, "Đăng ký tài khoản thành công !.",
                                     Toast.LENGTH_SHORT).show();
-                            FirebaseUser currentUser= mAuth.getCurrentUser();
-                            updateDisplayName(currentUser, hoTen);
-
+                            updateDisplayName(hoTen);
                             Intent mainActivityIntent = new Intent(SignUpActivity.this,MainActivity.class);
                             startActivity(mainActivityIntent);
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.e(TAG, "Authentication failed.");
+                            Log.d(TAG, "Authentication failed.");
                             Toast.makeText(SignUpActivity.this, "Đăng ký tài khoản thất bại !.",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -149,7 +157,8 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
-    private void updateDisplayName(FirebaseUser currentUser, String displayName) {
+    private void updateDisplayName(String displayName) {
+        FirebaseUser currentUser= mAuth.getCurrentUser();
         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                 .setDisplayName(displayName).build();
 
@@ -158,16 +167,10 @@ public class SignUpActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "User profile updated.");
+                            Log.d(TAG, "User display name updated.");
                         }
                     }
                 });
     }
-
-//    private void xuLyDangKyTaiKhoanThanhCong(User user){
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        String currentUID = currentUser.getUid();
-//        mData.child(Constant.USERS).child(currentUID).setValue(user);
-//    }
 
 }

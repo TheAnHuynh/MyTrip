@@ -125,7 +125,7 @@ public class UserManagerFragment extends Fragment {
         btnAvatarChange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: Xử lý cập nhật ảnh đại diện.
+                // Xử lý cập nhật ảnh đại diện.
                 updateUserProfileImage();
 
             }

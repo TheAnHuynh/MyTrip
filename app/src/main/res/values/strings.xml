@@ -58,4 +58,5 @@
     <!-- settings fragment -->
 
     <string name="userInfo">THÔNG TIN CÁ NHÂN</string>
+    <string name="logout">ĐĂNG XUẤT</string>
 </resources>

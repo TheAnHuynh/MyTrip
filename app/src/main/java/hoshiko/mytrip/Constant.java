@@ -5,6 +5,9 @@ package hoshiko.mytrip;
  */
 
 public class Constant {
+    //Mẫu Email hợp lệ
+    //Email ID validation pattern
+    public static final String regEx = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
 //    public final static String MYTRIP_LAST_USER_INFO = "MYTRIP_LAST_USER_INFO";
 //    public final static String USERNAME = "USERNAME";

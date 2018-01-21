@@ -4,7 +4,6 @@ package hoshiko.mytrip;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,14 +30,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Calendar;
 
 /**
@@ -49,6 +51,7 @@ public class UserManagerFragment extends Fragment {
 
     private static String TAG = UserManagerFragment.class.getSimpleName();
     private final int REQUEST_CODE = 2;
+    private final static String STORAGGE_REF = "mytrip-33a4a.appspot.com";
 
     private ImageButton btnBack, btnAvatarChange;
     private ImageView imgProfileImage;
@@ -58,11 +61,13 @@ public class UserManagerFragment extends Fragment {
 
     private String lastDisplayName = "";
     private String lastEmail = "";
+    private String lastProfileUrl = "";
     private Bitmap bitmap;
     private FirebaseUser currentUser;
-
+    private DatabaseReference mData;
     private FirebaseStorage storage;
-    private StorageReference storageRef;
+    private StorageReference profileImageStorageRef;
+
     public UserManagerFragment(){
     }
 
@@ -72,12 +77,15 @@ public class UserManagerFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Log.d(TAG,"onCreate");
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
-
+        mData = FirebaseDatabase.getInstance().getReferenceFromUrl(Constant.CHILD_USER_IMAGE_URL);
         storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReferenceFromUrl("gs://mytrip-33a4a.appspot.com/Profile Images");
+        profileImageStorageRef = storage.getReferenceFromUrl(Constant.PROFILE_STORAGE__FOLDER_URL);
 
         lastDisplayName = currentUser.getDisplayName();
         lastEmail = currentUser.getEmail();
+        lastProfileUrl = currentUser.getPhotoUrl().toString();
+        Log.i(TAG, lastProfileUrl);
+
     }
 
     @Nullable
@@ -127,7 +135,6 @@ public class UserManagerFragment extends Fragment {
             public void onClick(View view) {
                 // Xử lý cập nhật ảnh đại diện.
                 updateUserProfileImage();
-
             }
         });
 
@@ -155,14 +162,7 @@ public class UserManagerFragment extends Fragment {
         });
 
     }
-//    private void setProfileImage(Uri url){
-//        if(!url.toString().isEmpty()){
-//            Glide.with(getActivity()).load(url).into(imgProfileImage);
-//        }
-//        else {
-//            imgProfileImage.setImageResource(R.drawable.icon_profile_empty);
-//        }
-//    }
+
     private void updateNameAndEmail() {
         String hoTen = edtName.getText().toString().trim();
         String email = edtEmail.getText().toString().trim();
@@ -268,7 +268,8 @@ public class UserManagerFragment extends Fragment {
         byte[] data = baos.toByteArray();
 
         Calendar calendar = Calendar.getInstance();
-        StorageReference imgRef = storageRef.child("image" + calendar.getTimeInMillis() + ".png");
+        final String photoName = "image" + calendar.getTimeInMillis() + ".png";
+        StorageReference imgRef = profileImageStorageRef.child(photoName);
 
         UploadTask uploadTask = imgRef.putBytes(data);
         uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -295,8 +296,40 @@ public class UserManagerFragment extends Fragment {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    //currentUser = FirebaseAuth.getInstance().getCurrentUser();
                                     Log.d(TAG, "User photo url updated: " + downloadUrl.toString());
+                                    //Xóa ảnh đại diện cũ nếu nó được lưu trong FirebaseStorage
+                                    final String uID = currentUser.getUid();
+                                    if(lastProfileUrl.contains(STORAGGE_REF)){
+                                        // Lấy tên ảnh đại diện được lưu trên database
+                                        mData.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                String deleteImageName = dataSnapshot.getValue().toString().trim();
+                                                Log.d(TAG, "Last profile image name: "+ deleteImageName);
+                                                // Xóa ảnh trong FirebaseStorage
+                                                StorageReference deleteImageRef = profileImageStorageRef.child(deleteImageName);
+                                                deleteImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d(TAG, "Delete last profile image SUCCESSED.");
+                                                    }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.e(TAG, "Delete last profile image FAILED: " + e.toString());
+                                                    }
+                                                });
+                                                //Cập nhật thông tin ảnh lên FirebaseDatabase.
+                                                mData.child(uID).setValue(photoName);
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                    }
+                                    lastProfileUrl = currentUser.getPhotoUrl().toString();
                                     Toast.makeText(getActivity(), "Đã cập nhật Avatar.",Toast.LENGTH_SHORT).show();
                                 }
                             }

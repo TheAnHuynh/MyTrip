@@ -85,7 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
 
                 if(password.isEmpty()){
-                    Log.d(TAG, "Password tên bị bỏ trống !");
+                    Log.d(TAG, "Password bị bỏ trống !");
                     Toast.makeText(SignUpActivity.this,"Password bị bỏ trống !",
                             Toast.LENGTH_SHORT).show();
                     return;

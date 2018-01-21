@@ -9,6 +9,10 @@ public class Constant {
     //Email ID validation pattern
     public static final String regEx = "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}\\b";
 
+    // Tên nút lưu tên ảnh avt của người dùng
+    public static final String CHILD_USER_IMAGE_URL = "https://mytrip-33a4a.firebaseio.com/PROFILE_IMAGES_CHILD";
+    public static final String PROFILE_STORAGE__FOLDER_URL = "gs://mytrip-33a4a.appspot.com/Profile Images";
+
 //    public final static String MYTRIP_LAST_USER_INFO = "MYTRIP_LAST_USER_INFO";
 //    public final static String USERNAME = "USERNAME";
 //    public final static String PASSWORD = "PASSWORD";

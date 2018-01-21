@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsFragment extends Fragment {
 
-    private TextView txtCurrentUserInfo, txtLogout;
+    private TextView txtCurrentUserInfo, txtLogout, txtChangePassword;
 
     public SettingsFragment(){
     }
@@ -32,13 +32,12 @@ public class SettingsFragment extends Fragment {
 
         txtCurrentUserInfo = settingsView.findViewById(R.id.txtCurrentUserInfo);
         txtLogout = settingsView.findViewById(R.id.txtLogout);
+        txtChangePassword = settingsView.findViewById(R.id.txtChangePassword);
 
         txtCurrentUserInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 UserManagerFragment fragment = new UserManagerFragment();
-
                 FragmentManager manager = getActivity().getSupportFragmentManager();
                 FragmentTransaction transaction = manager.beginTransaction();
                 transaction.replace(R.id.fragmentContainer, fragment);
@@ -56,6 +55,19 @@ public class SettingsFragment extends Fragment {
                 getActivity().finish();
             }
         });
+
+        txtChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChangePasswordFragment changePasswordFragment = new ChangePasswordFragment();
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, changePasswordFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
         return settingsView;
     }
 

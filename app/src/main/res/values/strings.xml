@@ -56,7 +56,11 @@
     <string name="menu_settings">Settings</string>
 
     <!-- settings fragment -->
-
     <string name="userInfo">THÔNG TIN CÁ NHÂN</string>
     <string name="logout">ĐĂNG XUẤT</string>
+    <string name="changePassword">ĐỔI MẬT KHẨU</string>
+
+    <!-- change password fragment -->
+    <string name="fillYourNewPassword">Điền mật khẩu mới của bạn</string>
+    <string name="newPassword">New Password</string>
 </resources>

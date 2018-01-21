@@ -2,6 +2,7 @@ package hoshiko.mytrip;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -59,6 +60,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         Log.d(TAG, "onCreate");
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.hide();
         mAuth = FirebaseAuth.getInstance();
         //mData = FirebaseDatabase.getInstance().getReference(Constant.USERS);
         // Initialize Facebook Login button
@@ -240,13 +243,6 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(mainActivityIntent);
         finish();
     }
-
-//    private void updateUI(FirebaseUser user) {
-//        User currentUser = new User(user.getDisplayName(), user.getEmail());
-//        currentUser.setAvtUrl(user.getPhotoUrl().toString());
-//        String uID = user.getUid();
-//        mData.child(uID).setValue(currentUser);
-//    }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {

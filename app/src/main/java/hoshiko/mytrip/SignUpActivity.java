@@ -1,5 +1,6 @@
 package hoshiko.mytrip;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -118,9 +119,7 @@ public class SignUpActivity extends AppCompatActivity {
         txtSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent loginIntent = new Intent(SignUpActivity.this, LoginActivity.class);
-                startActivity(loginIntent);
-                finish();
+                gotoLoginActivity();
             }
         });
 
@@ -129,27 +128,31 @@ public class SignUpActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent loginIntent = new Intent(SignUpActivity.this, LoginActivity.class);
-        startActivity(loginIntent);
-        finish();
+        gotoLoginActivity();
     }
 
     private void dangKy(final String hoTen, final String email, final String password){
+        final ProgressDialog progressDialog = new ProgressDialog(SignUpActivity.this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show(this,"Please wait","Loading ...",true,false);
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Authentication successful.");
+                            updateDisplayName(hoTen);
+                            progressDialog.dismiss();
                             Toast.makeText(SignUpActivity.this, "Đăng ký tài khoản thành công !.",
                                     Toast.LENGTH_SHORT).show();
-                            updateDisplayName(hoTen);
                             Intent mainActivityIntent = new Intent(SignUpActivity.this,MainActivity.class);
                             startActivity(mainActivityIntent);
+                            overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                             finish();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.d(TAG, "Authentication failed.");
+                            progressDialog.dismiss();
                             Toast.makeText(SignUpActivity.this, "Đăng ký tài khoản thất bại !.",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -173,4 +176,10 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
+    public void gotoLoginActivity(){
+        Intent loginIntent = new Intent(SignUpActivity.this, LoginActivity.class);
+        startActivity(loginIntent);
+        overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
+        finish();
+    }
 }

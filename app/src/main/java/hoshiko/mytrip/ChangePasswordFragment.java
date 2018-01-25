@@ -1,5 +1,6 @@
 package hoshiko.mytrip;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -69,12 +70,18 @@ public class ChangePasswordFragment extends Fragment{
                     }
                 }
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.show(getActivity(),"Please wait","Loading ...",true,false);
                 user.updatePassword(password)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "User password updated.");
+                                    progressDialog.dismiss();
+                                    Toast.makeText(getActivity(),
+                                            "Đã cập nhật mật khẩu.",Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -83,4 +90,5 @@ public class ChangePasswordFragment extends Fragment{
 
         return changePasswordView;
     }
+
 }

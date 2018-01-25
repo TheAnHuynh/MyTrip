@@ -1,7 +1,9 @@
 package hoshiko.mytrip;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -31,6 +33,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.forgot_password_activity);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         mAuth = FirebaseAuth.getInstance();
 
         addControls();
@@ -74,6 +78,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         return;
                     }
                 }
+                final ProgressDialog progressDialog = new ProgressDialog(ForgotPasswordActivity.this);
+                progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progressDialog.show(ForgotPasswordActivity.this,"Please wait",
+                            "Loading ...",true,false);
                 mAuth.setLanguageCode("vi");
                 mAuth.sendPasswordResetEmail(emailAddress)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -81,6 +89,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "Email sent.");
+                                    progressDialog.dismiss();
                                     Toast.makeText(ForgotPasswordActivity.this,
                                             "Đã gửi Email",Toast.LENGTH_SHORT).show();
                                     Intent loginIntent = new Intent(ForgotPasswordActivity.this,

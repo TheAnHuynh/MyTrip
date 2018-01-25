@@ -37,4 +37,7 @@
         <!--<item name="android:drawableTop">@drawable/vertical_line</item>-->
     </style>
 
+    <style name="customProgressDialogTheme" parent="android:Theme.DeviceDefault.Dialog">
+        <item name="android:alertDialogTheme">@null</item>
+    </style>
 </resources>

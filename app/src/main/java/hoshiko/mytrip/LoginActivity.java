@@ -1,5 +1,6 @@
 package hoshiko.mytrip;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         Log.d(TAG, "onCreate");
-        ActionBar actionBar=getSupportActionBar();
+        ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         mAuth = FirebaseAuth.getInstance();
         //mData = FirebaseDatabase.getInstance().getReference(Constant.USERS);
@@ -116,6 +117,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent signUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(signUpIntent);
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                 finish();
             }
         });
@@ -138,6 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                 Intent forgotPasswordIntent = new Intent(LoginActivity.this,
                                              ForgotPasswordActivity.class);
                 startActivity(forgotPasswordIntent);
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
                 finish();
             }
         });
@@ -189,6 +192,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void signInFirebaseWithAnEmailAndPassword(String email, String password){
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show(this,"Please wait","Loading ...",true,false);
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -196,17 +202,16 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithMyTripEmail:success");
-                            Toast.makeText(LoginActivity.this, "Authentication successed.",
-                                    Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
                             //Điều hướng đến trang chủ
                             goToMainActivity();
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithMyTripEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            progressDialog.dismiss();
+                            Toast.makeText(LoginActivity.this, "Đăng nhập không thành công",
                                     Toast.LENGTH_SHORT).show();
                         }
-
                         // ...
                     }
                 });
@@ -215,33 +220,7 @@ public class LoginActivity extends AppCompatActivity {
     private void handleFacebookAccessToken(AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            //FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
-                            goToMainActivity();
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            //updateUI(null);
-                        }
-
-                        // ...
-                    }
-                });
-    }
-
-    private void goToMainActivity() {
-        Intent mainActivityIntent = new Intent(LoginActivity.this,MainActivity.class);
-        startActivity(mainActivityIntent);
-        finish();
+        signInFirebaseWithCredential(credential);
     }
 
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
@@ -262,6 +241,13 @@ public class LoginActivity extends AppCompatActivity {
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        signInFirebaseWithCredential(credential);
+    }
+
+    private void signInFirebaseWithCredential(AuthCredential credential){
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.show(this,"Please wait","Loading ...",true,false);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -269,22 +255,23 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.i(TAG, "signInWithCredential:success");
-                            //FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
+                            progressDialog.dismiss();
                             goToMainActivity();
 
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "Authentication failed", Toast.LENGTH_SHORT).show();
-
-                            //Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-                            //updateUI(null);
+                            progressDialog.dismiss();
+                            Toast.makeText(LoginActivity.this, "Đăng nhập không thành công", Toast.LENGTH_SHORT).show();
                         }
-
-                        // ...
                     }
                 });
     }
 
+    private void goToMainActivity() {
+        Intent mainActivityIntent = new Intent(LoginActivity.this,MainActivity.class);
+        startActivity(mainActivityIntent);
+        overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
+        finish();
+    }
 }

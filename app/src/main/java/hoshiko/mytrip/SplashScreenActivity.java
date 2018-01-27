@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,8 +31,18 @@ public class SplashScreenActivity extends AppCompatActivity {
             NetworkInfo networkInfo  = cm.getActiveNetworkInfo();
             if(networkInfo != null && networkInfo.isConnected()){
                 txtWarning.setText("");
-
                 currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                handleResult(currentUser);
+            }else{
+                txtWarning.setText("Rất tiếc! Không có kết nối Internet.");
+            }
+        }
+    };
+
+    private void handleResult(final FirebaseUser currentUser) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
                 if(currentUser != null){
                     // Điều hướng đến main activity
                     Intent mainActivity = new Intent(SplashScreenActivity.this,MainActivity.class);
@@ -42,11 +53,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                     startActivity(loginIntent);
                 }
                 finish();
-            }else{
-                txtWarning.setText("Rất tiếc! Không có kết nối Internet.");
             }
-        }
-    };
+        }, 2000);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +74,8 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         unregisterReceiver(internetConnectitiveReceiver);
     }
 }

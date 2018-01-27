@@ -55,6 +55,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                 Intent loginIntent = new Intent(ForgotPasswordActivity.this,
                                         LoginActivity.class);
                 startActivity(loginIntent);
+                overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
                 finish();
             }
         });
@@ -94,6 +95,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                             "Đã gửi Email",Toast.LENGTH_SHORT).show();
                                     Intent loginIntent = new Intent(ForgotPasswordActivity.this,
                                             LoginActivity.class);
+                                    overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
                                     startActivity(loginIntent);
                                     finish();
                                 }
@@ -103,4 +105,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent loginIntent = new Intent(ForgotPasswordActivity.this,
+                LoginActivity.class);
+        overridePendingTransition(R.anim.slide_from_right,R.anim.slide_to_left);
+        startActivity(loginIntent);
+        finish();
+    }
 }

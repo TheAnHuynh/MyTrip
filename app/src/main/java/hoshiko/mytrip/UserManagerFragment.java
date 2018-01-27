@@ -59,7 +59,7 @@ public class UserManagerFragment extends Fragment {
     private EditText edtName, edtEmail;
     private TextView txtUID;
     private Button btnEdit, btnSave;
-    private ProgressDialog progressDialog;
+
     private String lastDisplayName = "";
     private String lastEmail = "";
     private String lastProfileUrl = "";
@@ -86,12 +86,12 @@ public class UserManagerFragment extends Fragment {
         lastEmail = currentUser.getEmail();
         lastProfileUrl = currentUser.getPhotoUrl().toString();
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("Loading ...");
-        progressDialog.setTitle("Please wailt");
-        progressDialog.setIndeterminate(true);
-        Log.i(TAG, lastProfileUrl);
+//        progressDialog = new ProgressDialog(getActivity());
+//        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//        progressDialog.setMessage("Loading ...");
+//        progressDialog.setTitle("Please wailt");
+//        progressDialog.setIndeterminate(true);
+//        Log.i(TAG, lastProfileUrl);
 
     }
 
@@ -188,7 +188,6 @@ public class UserManagerFragment extends Fragment {
             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
                     .setDisplayName(hoTen)
                     .build();
-            progressDialog.show();
             currentUser.updateProfile(profileUpdates)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -197,7 +196,6 @@ public class UserManagerFragment extends Fragment {
                                 //currentUser = FirebaseAuth.getInstance().getCurrentUser();
                                 lastDisplayName = currentUser.getDisplayName();
                                 Log.d(TAG, "User profile updated: " + currentUser.getDisplayName());
-                                progressDialog.dismiss();
                                 Toast.makeText(getActivity(), "Đã cập nhật Tên.",Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -205,7 +203,6 @@ public class UserManagerFragment extends Fragment {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "User profile updated: failed.");
-                    progressDialog.dismiss();
                     Toast.makeText(getActivity(), "Cập nhật tên không thành công.",Toast.LENGTH_SHORT).show();
                 }
             });
@@ -218,7 +215,6 @@ public class UserManagerFragment extends Fragment {
                 edtEmail.setText(currentUser.getEmail());
                 return;
             }
-            progressDialog.show();
             currentUser.updateEmail(email)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
@@ -226,7 +222,6 @@ public class UserManagerFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 lastEmail = currentUser.getEmail();
                                 Log.d(TAG, "User email address updated: " + currentUser.getEmail());
-                                progressDialog.dismiss();
                                 Toast.makeText(getActivity(), "Đã cập nhật Email.",Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -234,7 +229,6 @@ public class UserManagerFragment extends Fragment {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "User email address updated: failed.");
-                    progressDialog.dismiss();
                     Toast.makeText(getActivity(),"Cập nhật email không thành công.", Toast.LENGTH_SHORT);
                 }
             });
@@ -297,13 +291,11 @@ public class UserManagerFragment extends Fragment {
         StorageReference imgRef = profileImageStorageRef.child(photoName);
 
         UploadTask uploadTask = imgRef.putBytes(data);
-        progressDialog.show();
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle unsuccessful uploads
                 Log.d(TAG, "Upload profile image to Firebase Storage: FAILED");
-                progressDialog.dismiss();
                 Toast.makeText(getContext(), "Cập nhật ảnh đại diện thất bại",
                         Toast.LENGTH_SHORT).show();
 
@@ -348,9 +340,6 @@ public class UserManagerFragment extends Fragment {
                                                 });
                                                 //Cập nhật thông tin ảnh lên FirebaseDatabase.
                                                 mData.child(uID).setValue(photoName);
-                                                progressDialog.dismiss();
-                                                lastProfileUrl = currentUser.getPhotoUrl().toString();
-                                                Toast.makeText(getActivity(), "Đã cập nhật Avatar.",Toast.LENGTH_SHORT).show();
                                             }
 
                                             @Override
@@ -359,11 +348,16 @@ public class UserManagerFragment extends Fragment {
                                             }
                                         });
                                     }
+
                                 }
                             }
                         });
+                lastProfileUrl = currentUser.getPhotoUrl().toString();
+                Toast.makeText(getContext(), "Đã cập nhật Avatar.",Toast.LENGTH_SHORT).show();
             }
+
         });
+
     }
 
 

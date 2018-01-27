@@ -41,7 +41,7 @@ public class SignUpActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         addControls();
-        addEvennts();
+        addEvents();
     }
 
     private void addControls() {
@@ -52,10 +52,9 @@ public class SignUpActivity extends AppCompatActivity {
         chkTermsAndConditions = findViewById(R.id.terms_conditions);
         btnSignUp = findViewById(R.id.signUpBtn);
         txtSignIn = findViewById(R.id.already_user);
-
     }
 
-    private void addEvennts() {
+    private void addEvents() {
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
